@@ -1,0 +1,149 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with onboarding state, KYC info, and trading account balances",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 256 },
+        "fullName": { "type": "string", "maxLength": 128 },
+        "phoneNumber": { "type": "string", "maxLength": 32 },
+        "country": { "type": "string", "maxLength": 64 },
+        "address": { "type": "string", "maxLength": 256 },
+        "city": { "type": "string", "maxLength": 64 },
+        "postalCode": { "type": "string", "maxLength": 32 },
+        "nationality": { "type": "string", "maxLength": 64 },
+        "dateOfBirth": { "type": "string", "maxLength": 32 },
+        "idType": { "type": "string", "maxLength": 64 },
+        "idNumber": { "type": "string", "maxLength": 64 },
+        "driveFileId": { "type": "string", "maxLength": 128 },
+        "verificationStatus": { "type": "string", "enum": ["pending", "verified", "unverified"] },
+        "accountType": { "type": "string", "enum": ["live", "demo"] },
+        "liveBalance": { "type": "number" },
+        "demoBalance": { "type": "number" },
+        "onboardingStep": { "type": "number" },
+        "onboardingCompleted": { "type": "boolean" },
+        "role": { "type": "string", "enum": ["user", "owner"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "fullName", "country", "role"]
+    },
+    "QuestionnaireResponse": {
+      "title": "QuestionnaireResponse",
+      "description": "Investor suitability answers from the 7-question onboarding flow",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "q1_age": { "type": "string", "maxLength": 64 },
+        "q2_profession": { "type": "string", "maxLength": 64 },
+        "q3_tradingExperience": { "type": "string", "maxLength": 64 },
+        "q4_marketKnowledge": { "type": "string", "maxLength": 64 },
+        "q5_investmentGoals": { "type": "string", "maxLength": 64 },
+        "q6_riskTolerance": { "type": "string", "maxLength": 64 },
+        "q7_timeHorizon": { "type": "string", "maxLength": 64 },
+        "completedAt": { "type": "string" }
+      },
+      "required": ["userId", "q1_age", "q2_profession"]
+    },
+    "PaymentMethod": {
+      "title": "PaymentMethod",
+      "description": "Deposit destination instructions maintained exclusively by platform owner",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "enum": ["main", "alternative"] },
+        "bankName": { "type": "string", "maxLength": 128 },
+        "accountNumber": { "type": "string", "maxLength": 64 },
+        "accountOwnerName": { "type": "string", "maxLength": 128 },
+        "currency": { "type": "string", "maxLength": 16 },
+        "exchangeRate": { "type": "number" },
+        "minDeposit": { "type": "number" },
+        "maxDeposit": { "type": "number" },
+        "instructions": { "type": "string", "maxLength": 1024 },
+        "isActive": { "type": "boolean" },
+        "updatedAt": { "type": "string" },
+        "updatedBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "name", "bankName", "accountNumber", "accountOwnerName", "currency"]
+    },
+    "DepositRequest": {
+      "title": "DepositRequest",
+      "description": "User submitted deposit receipt and pending request for review",
+      "type": "object",
+      "properties": {
+        "requestId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "format": "email", "maxLength": 256 },
+        "usdAmount": { "type": "number" },
+        "convertedAmount": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 16 },
+        "paymentMethodId": { "type": "string", "maxLength": 64 },
+        "paymentMethodName": { "type": "string", "maxLength": 128 },
+        "confirmationPasscode": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["pending", "verified", "rejected"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["requestId", "userId", "usdAmount", "status"]
+    },
+    "WithdrawalRequest": {
+      "title": "WithdrawalRequest",
+      "description": "User submitted withdrawal payout request",
+      "type": "object",
+      "properties": {
+        "requestId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "format": "email", "maxLength": 256 },
+        "amount": { "type": "number" },
+        "bankName": { "type": "string", "maxLength": 128 },
+        "accountNumber": { "type": "string", "maxLength": 64 },
+        "accountHolderName": { "type": "string", "maxLength": 128 },
+        "fee": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "processed", "rejected"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["requestId", "userId", "amount", "status"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable log entry of privileged administrative actions",
+      "type": "object",
+      "properties": {
+        "logId": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 64 },
+        "target": { "type": "string", "maxLength": 128 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["logId", "ownerUid", "action", "target", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Primary user profile, KYC data, and balances"
+    },
+    "/users/{userId}/questionnaire/{responseId}": {
+      "schema": "QuestionnaireResponse",
+      "description": "Investor questionnaire responses"
+    },
+    "/paymentMethods/{methodId}": {
+      "schema": "PaymentMethod",
+      "description": "Public deposit payment destinations maintained by owner"
+    },
+    "/depositRequests/{requestId}": {
+      "schema": "DepositRequest",
+      "description": "User deposit requests"
+    },
+    "/withdrawalRequests/{requestId}": {
+      "schema": "WithdrawalRequest",
+      "description": "User withdrawal requests"
+    },
+    "/auditLogs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Protected administrative audit records"
+    }
+  }
+}
